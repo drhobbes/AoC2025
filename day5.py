@@ -22,3 +22,24 @@ for ingr in available:
     count += 1
 
 print('part1:', count)
+
+# part 2
+first_id = [rng[0] for rng in ranges]
+secnd_id = [rng[1] for rng in ranges]
+first_id = sorted(first_id)
+secnd_id = sorted(secnd_id)
+
+merged = []
+index = 0
+while index < len(ranges):
+  first = first_id[index]
+  while index < len(ranges)-1 and secnd_id[index] >= first_id[index+1]:
+    index += 1
+  merged.append([first, secnd_id[index]])
+  print(merged[-1])
+  index += 1
+
+total = 0
+for rang in merged:
+  total += rang[1] - rang[0] + 1
+print('part2:', total)
