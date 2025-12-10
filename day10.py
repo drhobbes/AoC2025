@@ -2,6 +2,7 @@ lights = []
 buttons = []
 joltage = []
 states = []
+jolt_states = []
 
 with open('day10_input.txt','r') as f:
   for line in f:
@@ -16,6 +17,7 @@ with open('day10_input.txt','r') as f:
         joltage.append([int(x) for x in part[1:-1].split(',')])
     buttons.append(schematic)
     states.append(dict())
+    jolt_states.append(dict())
 
 def press(button, state):
   result = ''
@@ -55,3 +57,10 @@ for i in range(len(lights)):
   push_buttons(i, start)
   total += states[i][lights[i]]
 print('part1:',total)
+
+def puth_more_buttons(index, current_state):
+  for i in range(len(current_state)):
+    if current_state[i] > joltage[index][i]:
+      return False
+
+  updated = []
