@@ -13,3 +13,4 @@ for i in range(len(red_tiles)-1):
       max_area = area
 
 print('part1:', max_area)
+
