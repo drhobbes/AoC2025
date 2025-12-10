@@ -2,9 +2,8 @@ lights = []
 buttons = []
 joltage = []
 states = []
-jolt_states = []
 
-with open('day10_input.txt','r') as f:
+with open('day10_babyinput.txt','r') as f:
   for line in f:
     parts = line.strip().split()
     schematic = []
@@ -17,7 +16,6 @@ with open('day10_input.txt','r') as f:
         joltage.append([int(x) for x in part[1:-1].split(',')])
     buttons.append(schematic)
     states.append(dict())
-    jolt_states.append(dict())
 
 def press(button, state):
   result = ''
@@ -50,17 +48,45 @@ def push_buttons(index, current_state):
     push_buttons(index, state)
   
 # part 1
+#total = 0
+#for i in range(len(lights)):
+#  start = '.'*len(lights[i])
+#  states[i][start] = 0
+#  push_buttons(i, start)
+#  total += states[i][lights[i]]
+#print('part1:',total)
+
+# part 2
+def jolt_press(button, state):
+  result = state[:]
+  for i in button:
+    result[i] += 1
+  return result
+
 total = 0
-for i in range(len(lights)):
-  start = '.'*len(lights[i])
-  states[i][start] = 0
-  push_buttons(i, start)
-  total += states[i][lights[i]]
-print('part1:',total)
+for i in range(len(joltage)):
+  # record the initial index of each joltage
+  goal_state = {joltage[i][j]:j for j in range(len(joltage[i]))}
 
-def puth_more_buttons(index, current_state):
-  for i in range(len(current_state)):
-    if current_state[i] > joltage[index][i]:
-      return False
+  # split out the buttons that could contribute to each joltage
+  button_group = []
+  for j in range(len(joltage[i])):
+    button_group.append(list())
+    for button in buttons[i]:
+      if j in button:
+        button_group[j].append(button)
 
-  updated = []
+  # if any group only has one value in it, press that button that number of times
+  state = [0]*len(joltage[i])
+  subtotal = 0
+  for j in range(len(button_group)):
+    if len(button_group[j]) == 1:
+      for k in range(joltage[i][j]):
+        state = jolt_press(button_group[j][0], state)
+      subtotal += joltage[i][j]
+      # and remove that button as an option from everywhere else
+      for group in button_group:
+        if button_group[j][0] in group:
+          del group[group.index(button_group[j][0])]
+
+  
